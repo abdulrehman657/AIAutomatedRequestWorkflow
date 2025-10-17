@@ -1,0 +1,1226 @@
+{
+  "name": "Automated Request",
+  "nodes": [
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "<!doctype html>\n<html>\n  <head>\n    <meta charset=\"utf-8\">\n    <title>Status Updated</title>\n    <style>\n      body {\n        font-family: Arial, sans-serif;\n        text-align: center;\n        padding: 50px;\n        background: #f7f7f7;\n        color: #333;\n      }\n      h2 {\n        color: #28a745;\n      }\n      p {\n        font-size: 16px;\n        margin-top: 20px;\n      }\n    </style>\n  </head>\n  <body>\n    <h2>✅ Status has been updated!</h2>\n    <p>You can safely close this tab.</p>\n\n    <script>\n      setTimeout(() => window.close(), 2000)\n",
+        "options": {
+          "responseCode": 200,
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "text/html"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -304,
+        -2000
+      ],
+      "id": "43656628-68b7-4e84-b6f4-002790eb9462",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Status }}",
+                    "rightValue": "Resolving",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "fd59f261-66bc-4430-abda-ecc6c1ab047b"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2c5274a2-a683-4fd8-9d91-90d666588f15",
+                    "leftValue": "={{ $json.Status }}",
+                    "rightValue": "Resolved",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        144,
+        -2000
+      ],
+      "id": "d2f352ad-097c-40f0-be4a-078a77e369bc",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "path": "React-Contact-Form",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -976,
+        -2320
+      ],
+      "id": "5dd049af-5f0b-467d-b344-fbe2745465d0",
+      "name": "Start",
+      "webhookId": "62b33bbc-769f-47f6-aa94-bddf7df5a2c1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Generate short clean ID (REQ-XXXX)\nconst random = Math.floor(1000 + Math.random() * 9000); // 4 digits\nconst requestId = `REQ-${random}`;\n\nreturn [{\n  json: {\n    request_id: requestId,\n    ...$json\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -752,
+        -2320
+      ],
+      "id": "24b45734-2946-461f-838a-4df2b8987bd5",
+      "name": "Request ID Generator"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA",
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.query.timestamp }}",
+            "Full Name": "={{ $json.query.full_name }}",
+            "Email address": "={{ $json.query.email_address }}",
+            "Phone number": "={{ $json.query.phone_number }}",
+            "Department/Team": "={{ $json.query.department }}",
+            "Request Type": "={{ $json.query.request_type }}",
+            "Message": "={{ $json.query.message }}",
+            "row_number": 0,
+            "Request ID": "={{ $json.request_id }}",
+            "Status": "={{ $json.query.status }}",
+            "Priority": "={{ $json.query.priority }}",
+            "Summary": "={{ $json.query.summary }}"
+          },
+          "matchingColumns": [
+            "Request ID"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email address",
+              "displayName": "Email address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone number",
+              "displayName": "Phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Department/Team",
+              "displayName": "Department/Team",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Request Type",
+              "displayName": "Request Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Request ID",
+              "displayName": "Request ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -528,
+        -2320
+      ],
+      "id": "cd5cb49f-c9ef-46de-8e13-20f45f5ec910",
+      "name": "Add Row",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kwwTN8F0P9NV1rnr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "192e6f67-7908-46b4-93a0-10e98f3b575f",
+              "leftValue": "={{ $json.Status }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "698d05e4-f24b-4413-88bf-ee28cf4d9d93",
+              "leftValue": "={{ $json.Priority }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            },
+            {
+              "id": "358f15d8-2371-4412-8676-ea732f0cae32",
+              "leftValue": "={{ $json.Summary }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -304,
+        -2320
+      ],
+      "id": "c83cb611-6c49-471b-a324-2a8215d80159",
+      "name": "Filter"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -80,
+        -2320
+      ],
+      "id": "d7b51aca-d826-439a-8d79-0734366d2740",
+      "name": "Wait",
+      "webhookId": "1c85a717-db34-4158-86cf-69c399204e31"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=AIzaSyBa4K78KpLq5YRL_UrvjZzF0PBVTuN1MRM",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "JSON",
+        "body": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"You are a priority classifier. Analyze the request below and respond ONLY in valid JSON with two keys: `priority` and `summary`. No explanations.\\n\\nDepartment: {{ $json['Department/Team'] }}\\nRequest Type: {{ $json['Request Type'] }}\\nMessage: {{ $json.Message }}\\n\\nFormat:\\n{\\n  \\\"priority\\\": \\\"Critical | High | Medium | Low\\\",\\n  \\\"summary\\\": \\\"one short line summary\\\"\\n}\"\n        }\n      ]\n    }\n  ]\n}\n",
+        "options": {
+          "lowercaseHeaders": true
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        144,
+        -2320
+      ],
+      "id": "0063acb9-e70d-4a96-88aa-6e3056a721a1",
+      "name": "AI Summary"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "const candidates = $json.candidates;\n\n// Pick first candidate if it's an array\nlet first = Array.isArray(candidates) ? candidates[0] : candidates;\n\n// Extract raw text\nlet text = \"\";\nif (first?.content?.parts?.[0]?.text) {\n  text = first.content.parts[0].text;\n} else if (typeof first === \"string\") {\n  text = first;\n} else if (first?.output) {\n  text = first.output;\n}\n\n// Clean out ```json fences\nif (text.startsWith(\"```\")) {\n  text = text.replace(/```json|```/g, \"\").trim();\n}\n\nlet priority = \"Unknown\";\nlet summary = \"No summary provided\";\n\nif (text) {\n  try {\n    const parsed = JSON.parse(text);\n    priority = parsed.priority || priority;\n    summary = parsed.summary || summary;\n  } catch (e) {\n    summary = text; // fallback if still not valid JSON\n  }\n}\n\nreturn {\n  json: {\n    priority,\n    summary,\n    raw: text\n  }\n};\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        368,
+        -2320
+      ],
+      "id": "d590973b-832e-410d-a597-9141cdcdf4f4",
+      "name": "JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA",
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{ $('Filter').item.json['Full Name'] }}",
+            "Timestamp": "={{ $('Filter').item.json.Timestamp }}",
+            "Email address": "={{ $('Filter').item.json['Email address'] }}",
+            "Phone number": "={{ $('Filter').item.json['Phone number'] }}",
+            "Department/Team": "={{ $('Filter').item.json['Department/Team'] }}",
+            "Request Type": "={{ $('Filter').item.json['Request Type'] }}",
+            "Request ID": "={{ $('Filter').item.json['Request ID'] }}",
+            "Status": "=Unresolved",
+            "Priority": "={{ $json.priority }}",
+            "Summary": "={{ $json.summary }}",
+            "Message": "={{ $('Filter').item.json.Message }}"
+          },
+          "matchingColumns": [
+            "Request ID"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email address",
+              "displayName": "Email address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone number",
+              "displayName": "Phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Department/Team",
+              "displayName": "Department/Team",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Request Type",
+              "displayName": "Request Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Request ID",
+              "displayName": "Request ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Priority",
+              "displayName": "Priority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Summary",
+              "displayName": "Summary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        592,
+        -2320
+      ],
+      "id": "489ca363-897a-4205-9df1-d1418e6636b3",
+      "name": "Update ROWS",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kwwTN8F0P9NV1rnr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email address'] }}",
+        "subject": "We Received Your Request.",
+        "message": "=<html>\n  <body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #2c3e50; background-color: #f7f9fc; padding: 20px;\">\n\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width: 600px; margin: auto; background: #ffffff; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);\">\n      <tr>\n        <td style=\"padding: 25px;\">\n\n          <!-- Greeting -->\n          <p style=\"font-size: 16px; margin: 0 0 15px 0;\">\n            Hi <strong>{{ $json['Full Name'] }}</strong>,\n          </p>\n\n          <!-- Intro -->\n          <p style=\"margin: 0 0 20px 0;\">\n            Thank you for reaching out to us. Your request has been logged successfully, and our team is already reviewing it.  \n          </p>\n\n          <!-- Request Summary -->\n          <p style=\"margin: 0 0 10px 0; font-weight: bold; font-size: 15px; color: #34495e;\">\n            📋 Request Summary:\n          </p>\n\n          <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: collapse; font-size: 14px; margin-bottom: 20px;\">\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold; width: 140px;\">Request ID:</td>\n              <td>{{ $('Update ROWS').item.json['Request ID'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Status:</td>\n              <td>{{ $('Update ROWS').item.json['Status'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Type:</td>\n              <td>{{ $json['Request Type'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Department:</td>\n              <td>{{ $json['Department/Team'] }}</td>\n            </tr>\n          </table>\n\n          <!-- Customer Message -->\n          <p style=\"margin: 0 0 10px 0; font-weight: bold; font-size: 15px; color: #34495e;\">\n            📨 Your Message:\n          </p>\n          <blockquote style=\"margin: 0 0 20px 0; padding: 12px 15px; background: #f4f6f9; border-left: 4px solid #3498db; border-radius: 4px; font-size: 14px; color: #555;\">\n            {{ $json['Message'] }}\n          </blockquote>\n\n          <!-- Closing -->\n          <p style=\"margin: 0 0 15px 0;\">\n            ✅ Our support team will follow up with you shortly.  \n            Please keep your <strong>Request ID</strong> handy if you’d like to check in with us later.\n          </p>\n\n          <p style=\"color: #7f8c8d; font-size: 13px; margin: 25px 0 0 0;\">\n            Best regards,<br>\n            <strong>The Support Team</strong>\n          </p>\n\n        </td>\n      </tr>\n    </table>\n\n  </body>\n</html>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        816,
+        -2320
+      ],
+      "id": "87ff52a9-2dd9-4c7a-9afc-a83863d9b51e",
+      "name": "Customer Mail",
+      "webhookId": "cf556f63-5ac4-4447-bcac-117b305bb7bf",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6lU7dmVPNBlJMcQj",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.DeptEmail }}",
+        "subject": "A New Request:",
+        "message": "=<html>\n  <body style=\"font-family: Arial, sans-serif; line-height: 1.6; color: #2c3e50; background-color: #f7f9fc; padding: 20px;\">\n\n    <table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\" style=\"max-width: 650px; margin: auto; background: #ffffff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);\">\n      <tr>\n        <td style=\"padding: 25px;\">\n\n          <!-- Header -->\n          <p style=\"font-size: 16px; margin: 0 0 15px 0;\">\n            📬 <strong>New Support Request Received</strong>\n          </p>\n\n          <!-- Request Info -->\n          <table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\" style=\"border-collapse: collapse; font-size: 14px; margin-bottom: 20px;\">\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold; width: 140px;\">Request ID:</td>\n              <td>{{ $('Update ROWS').item.json['Request ID'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Status:</td>\n              <td>{{ $('Update ROWS').item.json['Status'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Priority:</td>\n              <td>{{ $('Update ROWS').item.json['Priority'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Time:</td>\n              <td>{{ $('Update ROWS').item.json.Timestamp }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Name:</td>\n              <td>{{ $('Update ROWS').item.json['Full Name'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Email:</td>\n              <td>{{ $('Update ROWS').item.json['Email address'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Phone:</td>\n              <td>{{ $('Update ROWS').item.json['Phone number'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Department:</td>\n              <td>{{ $('Update ROWS').item.json['Department/Team'] }}</td>\n            </tr>\n            <tr>\n              <td style=\"padding: 6px 0; font-weight: bold;\">Type:</td>\n              <td>{{ $('Update ROWS').item.json['Request Type'] }}</td>\n            </tr>\n          </table>\n\n          <!-- Summary -->\n          <p style=\"margin: 0 0 10px 0; font-weight: bold; font-size: 15px; color: #34495e;\">\n            📝 Summary:\n          </p>\n          <blockquote style=\"margin: 0 0 20px 0; padding: 12px 15px; background: #f4f6f9; border-left: 4px solid #e67e22; border-radius: 4px; font-size: 14px; color: #555;\">\n            {{ $('Update ROWS').item.json['Summary'] }}\n          </blockquote>\n\n          <!-- Customer Message -->\n          <p style=\"margin: 0 0 10px 0; font-weight: bold; font-size: 15px; color: #34495e;\">\n            📨 Customer Message:\n          </p>\n          <blockquote style=\"margin: 0 0 20px 0; padding: 12px 15px; background: #f9f9f9; border-left: 4px solid #3498db; border-radius: 4px; font-size: 14px; color: #555;\">\n            {{ $('Update ROWS').item.json.Message }}\n          </blockquote>\n\n          <!-- Action Buttons -->\n          <p style=\"margin: 0 0 15px 0;\">\n            👉 You can update the ticket status below:\n          </p>\n          <p>\n            <a href=\"https://9452be38d7f5.ngrok-free.app/webhook/update-status?id={{ $('Update ROWS').item.json['Request ID'] }}&status=Resolving\" \n               style=\"display:inline-block;padding:10px 18px;background:#007bff;color:#fff;\n                      text-decoration:none;border-radius:6px;font-family:sans-serif;font-size:14px;margin-right:8px;\">\n               🔄 Mark as Resolving\n            </a>\n\n            <a href=\"https://9452be38d7f5.ngrok-free.app/webhook/update-status?id={{ $('Update ROWS').item.json['Request ID'] }}&status=Resolved\" \n               style=\"display:inline-block;padding:10px 18px;background:#28a745;color:#fff;\n                      text-decoration:none;border-radius:6px;font-family:sans-serif;font-size:14px;\">\n               ✅ Mark as Resolved\n            </a>\n          </p>\n\n          <p style=\"color: #7f8c8d; font-size: 13px; margin-top: 25px;\">\n            This email contains all details you need to process the request efficiently.\n          </p>\n\n        </td>\n      </tr>\n    </table>\n\n  </body>\n</html>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1264,
+        -2320
+      ],
+      "id": "af1cbe0d-2624-4991-b5ab-437fa9835a7d",
+      "name": "Developer Mail",
+      "webhookId": "7a0fba05-c468-4cca-89e4-82f2bf9e03de",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6lU7dmVPNBlJMcQj",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1lAIZB1sDutWnvx4TpnTP-ZNKpZCpp-829oB8b9ATpDk",
+          "mode": "list",
+          "cachedResultName": "Department/Team",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lAIZB1sDutWnvx4TpnTP-ZNKpZCpp-829oB8b9ATpDk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1lAIZB1sDutWnvx4TpnTP-ZNKpZCpp-829oB8b9ATpDk/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Department/Team\t",
+              "lookupValue": "={{ $('Update ROWS').item.json['Department/Team'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1040,
+        -2320
+      ],
+      "id": "f034c97a-58b3-420e-8dae-86c2651a9627",
+      "name": "Department's Mails Info.",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kwwTN8F0P9NV1rnr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C09EHHNMS93",
+          "mode": "list",
+          "cachedResultName": "all-general"
+        },
+        "text": "=:bell: *A new request has been submitted!*\n\n:clock3: *Time:* {{ $('Update ROWS').item.json.Timestamp }}\n:bust_in_silhouette: *Name:* {{ $('Update ROWS').item.json['Full Name'] }}\n:e-mail: *Email:* {{ $('Update ROWS').item.json['Email address'] }}\n:telephone_receiver: *Phone:* {{ $('Update ROWS').item.json['Phone number'] }}\n:office: *Department:* {{ $('Update ROWS').item.json['Department/Team'] }}\n:pushpin: *Type:* {{ $('Update ROWS').item.json['Request Type'] }}\n:zap: *Priority:* {{ $('Update ROWS').item.json['Priority'] }}\n\n:page_facing_up: *Summary:* {{ $('Update ROWS').item.json['Summary'] }}\n\n:memo: *Message:* {{ $('Update ROWS').item.json.Message }}\n\n:white_check_mark: Please review this request and take the necessary action.\n---------------------------------------\n",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1488,
+        -2320
+      ],
+      "id": "7340d2a4-45d4-4e66-b12c-9532ffab98c2",
+      "name": "Slack Message",
+      "webhookId": "c7a7c5c3-b56b-4487-83b5-8647da12c798",
+      "credentials": {
+        "slackApi": {
+          "id": "Tc9dd4Wu8ppsiv48",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "guildId": {
+          "__rl": true,
+          "value": "1419664568061526069",
+          "mode": "list",
+          "cachedResultName": "Testing Server",
+          "cachedResultUrl": "https://discord.com/channels/1419664568061526069"
+        },
+        "channelId": {
+          "__rl": true,
+          "value": "1419664605017542657",
+          "mode": "list",
+          "cachedResultName": "requests",
+          "cachedResultUrl": "https://discord.com/channels/1419664568061526069/1419664605017542657"
+        },
+        "content": "=:bell: *A new request has been submitted!*\n\n:clock3: *Time:* {{ $('Update ROWS').item.json.Timestamp }}\n:bust_in_silhouette: *Name:* {{ $('Update ROWS').item.json['Full Name'] }}\n📧 *Email:* {{ $('Update ROWS').item.json['Email address'] }}\n:telephone_receiver: *Phone:* {{ $('Update ROWS').item.json['Phone number'] }}\n:office: *Department:* {{ $('Update ROWS').item.json['Department/Team'] }}\n:pushpin: *Type:* {{ $('Update ROWS').item.json['Request Type'] }}\n:zap: *Priority:* {{ $('Update ROWS').item.json['Priority'] }}\n\n:page_facing_up: *Summary:* {{ $('Update ROWS').item.json['Summary'] }}\n\n:memo: *Message:* {{ $('Update ROWS').item.json.Message }}\n\n:white_check_mark: Please review this request and take the necessary action.\n---------------------------------------\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.discord",
+      "typeVersion": 2,
+      "position": [
+        1712,
+        -2320
+      ],
+      "id": "d27a8f99-9b20-4b8f-be6a-9ffeb98cac0e",
+      "name": "Discord Message",
+      "webhookId": "dfe47d68-b641-42d7-98a6-ea02fabcfea9",
+      "credentials": {
+        "discordBotApi": {
+          "id": "OfAb7VUXfKRQxbnf",
+          "name": "Discord Bot account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "path": "update-status",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -976,
+        -2000
+      ],
+      "id": "c1e1d83c-c83c-45c5-89b0-06ec57cb7164",
+      "name": "Status Updater",
+      "webhookId": "21d8fc77-0102-405e-945a-11c8c21346f0"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e890b0f9-4f05-4605-8048-f9bb77429766",
+              "name": "Request ID",
+              "value": "={{$json[\"query\"][\"id\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "acaa7aa9-4dd3-46c8-9d36-9197a411cd30",
+              "name": "Status",
+              "value": "={{$json[\"query\"][\"status\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -752,
+        -2000
+      ],
+      "id": "62793f9e-7c21-480e-92e0-0985c578d308",
+      "name": "Data"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA",
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Request ID": "={{ $json['Request ID'] }}",
+            "Status": "={{ $json.Status }}"
+          },
+          "matchingColumns": [
+            "Request ID"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email address",
+              "displayName": "Email address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Phone number",
+              "displayName": "Phone number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Department/Team",
+              "displayName": "Department/Team",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Request Type",
+              "displayName": "Request Type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Message",
+              "displayName": "Message",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Request ID",
+              "displayName": "Request ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -528,
+        -2000
+      ],
+      "id": "5de0e0f2-a575-4564-a03b-5347d86f8980",
+      "name": "Update Status",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kwwTN8F0P9NV1rnr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA",
+          "mode": "list",
+          "cachedResultName": "Requests",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Yd8G8Et8qsxChbD_Q6SAWhMyphp6wQDcryrrlCrISQA/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Request ID",
+              "lookupValue": "={{ $json['Request ID'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -80,
+        -2000
+      ],
+      "id": "a25e801b-2eee-4ec0-b46f-74966b156069",
+      "name": "Sheet's Info.",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "kwwTN8F0P9NV1rnr",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email address'] }}",
+        "subject": "=Your request {{ $json['Request ID'] }} is now being resolved",
+        "message": "=<p>Hi {{ $json['Full Name'] }},</p>\n\n<p>Good news! Your request <strong>{{ $json['Request ID'] }}</strong> is <strong>being resolved</strong> by our team right now.</p>\n\n<p>We’re on it and will keep you updated once it’s done. Thanks for waiting patiently!</p>\n\n<p>Best regards,<br>\n\n— The Support Team</p>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        368,
+        -2096
+      ],
+      "id": "d4ab27d4-34c3-4261-ae89-e4717084ba3d",
+      "name": "Resolving Mail",
+      "webhookId": "6e947f61-1628-4b99-aead-10999f7ea3d4",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6lU7dmVPNBlJMcQj",
+          "name": "Gmail account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json['Email address'] }}",
+        "subject": "=Your request {{ $json['Request ID'] }} has been resolved",
+        "message": "=<p>Hi {{ $json['Full Name'] }},</p>\n\n<p>✅ Your request <strong>{{ $json['Request ID'] }}</strong> has been <strong>resolved</strong>.</p>\n\n<p>We hope everything meets your expectations. If you have any further questions, feel free to reply to this email.</p>\n\n<p>Thank you for reaching out!</p>\n\n<p>— Support Team</p>\n",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        368,
+        -1904
+      ],
+      "id": "fcfc2b2c-d125-4e60-9e1e-b449eb327ad5",
+      "name": "Resolved Mail",
+      "webhookId": "3bb68bff-f868-4a27-b21f-d69732bdd04b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "6lU7dmVPNBlJMcQj",
+          "name": "Gmail account 2"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Respond to Webhook": {
+      "main": [
+        [
+          {
+            "node": "Sheet's Info.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Resolving Mail",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Resolved Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Start": {
+      "main": [
+        [
+          {
+            "node": "Request ID Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request ID Generator": {
+      "main": [
+        [
+          {
+            "node": "Add Row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Row": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "AI Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Summary": {
+      "main": [
+        [
+          {
+            "node": "JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Update ROWS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update ROWS": {
+      "main": [
+        [
+          {
+            "node": "Customer Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Mail": {
+      "main": [
+        [
+          {
+            "node": "Department's Mails Info.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Developer Mail": {
+      "main": [
+        [
+          {
+            "node": "Slack Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Department's Mails Info.": {
+      "main": [
+        [
+          {
+            "node": "Developer Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack Message": {
+      "main": [
+        [
+          {
+            "node": "Discord Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status Updater": {
+      "main": [
+        [
+          {
+            "node": "Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Data": {
+      "main": [
+        [
+          {
+            "node": "Update Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Status": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheet's Info.": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Discord Message": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4a4e563b-43d3-4b08-b5d8-ed59667760d5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "51d8c322f87049d3fd6fb4ddd62546551d56b752a62408793bd6c0af9bac6798"
+  },
+  "id": "1UjEw1bb14lKyzra",
+  "tags": []
+}
