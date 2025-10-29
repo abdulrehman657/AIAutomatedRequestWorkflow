@@ -6,6 +6,8 @@ This Repo Contains The AI Automated Request Workflow
 
 > **An AI-enabled automated request workflow** that connects React, Google Sheets, Slack, Discord, and Gmail to streamline how companies manage incoming contact or support requests.
 
+Watch Vid: https://github.com/abdulrehman657/AIAutomatedRequestWorkflow/releases/download/V1.0/niga.remastered.mp4
+
 ---
 
 ## 🧩 Overview
