@@ -6,7 +6,7 @@ This Repo Contains The AI Automated Request Workflow
 
 > **An AI-enabled automated request workflow** that connects React, Google Sheets, Slack, Discord, and Gmail to streamline how companies manage incoming contact or support requests.
 
-Watch the demo video : (https://vimeo.com/1131601128?share=copy&fl=sv&fe=ci)
+Watch the demo video : (https://youtu.be/MziuW5cC_hE)
 
 
 ---
